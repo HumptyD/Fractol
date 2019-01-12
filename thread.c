@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 19:17:10 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/11 21:05:30 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/12 21:38:21 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	thread(t_var *var)
 	pthread_t	t[THREAD_N];
 	int			i;
 
+	clear_image(var->img);
 	i = -1;
 	while (++i < THREAD_N)
 	{

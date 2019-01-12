@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/24 16:08:26 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/11 21:06:09 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/12 20:49:23 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,26 @@
 # include <math.h>
 # include <pthread.h>
 
-# define W_WIDTH 1089
+# define W_WIDTH 720
 # define W_HEIGHT 720
 # define THREAD_N 16
 
 typedef struct	s_complex
 {
-	long double		re;
-	long double		im;
-	long double		zre;
-	long double		zim;
+	double		re;
+	double		im;
+	double		zre;
+	double		zim;
 }				t_complex;
+
+typedef struct	s_mouse
+{
+	double		p_x;
+	double		p_y;
+	double		c_x;
+	double		c_y;
+	int			pressed;
+}				t_mouse;
 
 typedef struct	s_options
 {
@@ -45,34 +54,42 @@ typedef struct	s_img
 	int			endian;
 }				t_img;
 
-typedef	struct	s_mndlbrt
+typedef	struct	s_fractal
 {
-	double		xs;
-	double		ys;
-}				t_mndlbrt;
+	double		x_min;
+	double		y_min;
+	double		x_max;
+	double		y_max;
+	double		offx;
+	double		offy;
+	int			name;
+}				t_fractal;
 
 typedef struct	s_var
 {
 	void		*mlx;
 	void		*win;
-	char		*fractal;
 	t_img		*img;
 	t_options	opt;
 	t_complex	cx;
-	t_mndlbrt	mnd;
+	t_fractal	f;
+	t_mouse		ms;
 	int			x;
 	int			y;
 	int			y_max;
 }				t_var;
 
-void			init_image(t_var *var);
-void			init_var(t_var *var, char *name);
+void			init(t_var *var);
+void			init_fractal(t_var *var, char *name);
 void			*put_set(void *tab);
 void			display_error(int cond, char *str);
 void			set_pixel(t_var *var, int x, int y, int color);
 int				keyboard(int key, t_var *var);
 int				mouse_press(int button, int x, int y, t_var *var);
+int				mouse_release(int button, int x, int y, t_var *var);
+int				mouse_move(int x, int y, t_var *var);
 void			clear_image(t_img *img);
 void			thread(t_var *var);
+int				get_color(int n);
 
 #endif

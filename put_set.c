@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 19:25:34 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/11 21:04:21 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/12 20:35:42 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,69 @@
 void	mandelbrot(t_var *var, int x, int y)
 {
 	int		n;
-	long double	temp;
+	double	temp;
 
 	n = -1;
-	var->cx.re = var->mnd.xs + x / var->opt.scale;
-	var->cx.im = var->mnd.ys + y / var->opt.scale;
+	var->cx.re = (((double)x / W_WIDTH) * (var->f.x_max - var->f.x_min)) *
+		var->opt.scale + var->f.x_min - var->f.offx;
+	var->cx.im = (((double)y / W_HEIGHT) * (var->f.y_max - var->f.y_min)) *
+		var->opt.scale + var->f.y_min - var->f.offy;
 	var->cx.zre = 0;
 	var->cx.zim = 0;
-	while (++n < var->opt.iter)
+	while (var->cx.zre * var->cx.zre + var->cx.zim * var->cx.zim < 4 &&
+			++n < var->opt.iter)
 	{
 		temp = var->cx.zre;
 		var->cx.zre = var->cx.zre * var->cx.zre -
 			var->cx.zim * var->cx.zim + var->cx.re;
 		var->cx.zim = 2 * temp * var->cx.zim + var->cx.im;
-		if (var->cx.zre + var->cx.zim > 16)
-			break ;
 	}
 	set_pixel(var, x, y, n == var->opt.iter ? 0 : n * 265);
+}
+
+void	burningship(t_var *var, int x, int y)
+{
+	int		n;
+	double	temp;
+
+	n = -1;
+	var->cx.re = (((double)x / W_WIDTH) * (var->f.x_max - var->f.x_min)) *
+		var->opt.scale + var->f.x_min - var->f.offx;
+	var->cx.im = (((double)y / W_HEIGHT) * (var->f.y_max - var->f.y_min)) *
+		var->opt.scale + var->f.y_min - var->f.offy;
+	var->cx.zre = 0;
+	var->cx.zim = 0;
+	while (var->cx.zre * var->cx.zre + var->cx.zim * var->cx.zim < 4 &&
+			++n < var->opt.iter)
+	{
+		temp = var->cx.zre;
+		var->cx.zre = ABS(var->cx.zre * var->cx.zre -
+			var->cx.zim * var->cx.zim + var->cx.re);
+		var->cx.zim = ABS(2 * temp * var->cx.zim + var->cx.im);
+	}
+	set_pixel(var, x, y, n == var->opt.iter ? 0 : get_color(n % 7));
+}
+
+void	julia(t_var *var, int x, int y)
+{
+	int		n;
+	double	temp;
+
+	n = -1;
+	var->cx.zre = (((double)x / W_WIDTH) * (var->f.x_max - var->f.x_min)) *
+		var->opt.scale + var->f.x_min - var->f.offx;
+	var->cx.zim = (((double)y / W_HEIGHT) * (var->f.y_max - var->f.y_min)) *
+		var->opt.scale + var->f.y_min - var->f.offy;
+	while (var->cx.zre * var->cx.zre + var->cx.zim * var->cx.zim < 4 &&
+			++n < var->opt.iter)
+	{
+		temp = var->cx.zre;
+		var->cx.zre = var->cx.zre * var->cx.zre -
+			var->cx.zim * var->cx.zim + var->cx.re;
+		var->cx.zim = 2 * temp * var->cx.zim + var->cx.im;
+	}
+	set_pixel(var, x, y, n == var->opt.iter ? 0 : n * 265);
+
 }
 
 void	*put_set(void *tab)
@@ -47,8 +93,12 @@ void	*put_set(void *tab)
 		var->y = temp;
 		while (var->y < var->y_max)
 		{
-			if (!ft_strcmp(var->fractal, "mandelbrot"))
+			if (var->f.name == 1)
 				mandelbrot(var, var->x, var->y);
+			else if (var->f.name == 2)
+				julia(var, var->x, var->y);
+			else if (var->f.name == 3)
+				burningship(var, var->x, var->y);
 			var->y++;
 		}
 		var->x++;

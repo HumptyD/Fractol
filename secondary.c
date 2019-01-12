@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/24 18:44:59 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/11 20:40:54 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/12 20:27:35 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,25 @@ void	display_error(int cond, char *str)
 	}
 }
 
+int		get_color(int n)
+{
+	if (n == 0)
+		return (0xD31F19);
+	else if (n == 1)
+		return (0xE58D12);
+	else if (n == 2)
+		return (0xE5D012);
+	else if (n == 3)
+		return (0x7BE512);
+	else if (n == 4)
+		return (0x12E5DE);
+	else if (n == 5)
+		return (0x1227E5);
+	else
+		return (0xE512C5);
+}
+
+/*
 double	ft_ilerp(double val, double first, double second)
 {
 	if (val == first)
@@ -49,4 +68,4 @@ int		get_color(int start, int end, double percent)
 	g = ft_lerpi((start >> 8) & 0xFF, (end >> 8) & 0xFF, percent);
 	b = ft_lerpi((start) & 0xFF, (end) & 0xFF, percent);
 	return (r << 16 | g << 8 | b);
-}
+}*/

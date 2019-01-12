@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 14:41:18 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/11 20:20:40 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/12 21:38:20 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,19 @@
 
 static void	zoom(int x, int y, t_var *var, double z)
 {
-	var->mnd.xs = (x / var->opt.scale + var->mnd.xs)
-		- (x / (var->opt.scale * z));
-	var->mnd.ys = (y / var->opt.scale + var->mnd.ys)
-		- (y / (var->opt.scale * z));
+	double	w;
+	double	h;
+	double	w1;
+	double	h1;
+
+	w = (var->f.x_max - var->f.x_min) * var->opt.scale;
+	h = (var->f.y_max - var->f.y_min) * var->opt.scale;
+	w1 = (var->f.x_max - var->f.y_min) * var->opt.scale * z;
+	h1 = (var->f.y_max - var->f.y_min) * var->opt.scale * z;
 	var->opt.scale *= z;
-	var->opt.iter++;
+	var->f.offx += ((double)x / W_WIDTH) * (w1 - w);
+	var->f.offy += ((double)y / W_HEIGHT) * (h1 - h);
+	(z < 1) ? var->opt.iter++ : var->opt.iter--;
 }
 
 int			keyboard(int key, t_var *var)
@@ -30,17 +37,65 @@ int			keyboard(int key, t_var *var)
 	return (0);
 }
 
+int			mouse_release(int button, int x, int y, t_var *var)
+{
+	(void)button;
+	(void)x;
+	(void)y;
+	var->ms.pressed = 0;
+	return (0);
+}
+
 int			mouse_press(int button, int x, int y, t_var *var)
 {
-	clear_image(var->img);
 	if (x >= 0 && x <= W_WIDTH && y >= 0 && y <= W_HEIGHT)
 	{
+		if (button == 1)
+		{
+			var->ms.c_x = x;
+			var->ms.c_y = y;
+			var->ms.pressed = 1;
+		}
+		if (button == 2)
+		{
+			var->ms.c_x = x;
+			var->ms.c_y = y;
+			var->ms.pressed = 2;
+		}
 		if (button == 5)
-			zoom(x, y, var, 1.1);
-		if (button == 4)
 			zoom(x, y, var, 0.9);
+		if (button == 4)
+			zoom(x, y, var, 1.1);
 		if (button == 4 || button == 5)
 			thread(var);
 	}
+	return (0);
+}
+
+int			mouse_move(int x, int y, t_var *var)
+{
+	double	w;
+	double	h;
+
+	var->ms.p_x = var->ms.c_x;
+	var->ms.p_y = var->ms.c_y;
+	var->ms.c_x = x;
+	var->ms.c_y = y;
+	if (var->ms.pressed == 1 && var->f.name == 2)
+	{
+		w = (var->f.x_max - var->f.x_min) * var->opt.scale;
+		h = (var->f.y_max - var->f.y_min) * var->opt.scale;
+		var->cx.re -= (double)(var->ms.p_x - var->ms.c_x) / W_WIDTH * w;
+		var->cx.im -= (double)(var->ms.p_y - var->ms.c_y) / W_HEIGHT * h;
+	}
+	if (var->ms.pressed == 2)
+	{
+		w = (var->f.x_max - var->f.x_min) * var->opt.scale;
+		h = (var->f.y_max - var->f.y_min) * var->opt.scale;
+		var->f.offx -= (double)(var->ms.p_x - var->ms.c_x) / W_WIDTH * w;
+		var->f.offy -= (double)(var->ms.p_y - var->ms.c_y) / W_HEIGHT * h;
+	}
+	if (var->ms.pressed)
+		thread(var);
 	return (0);
 }
