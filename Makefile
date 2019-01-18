@@ -6,7 +6,7 @@
 #    By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/08 14:33:53 by jlucas-l          #+#    #+#              #
-#    Updated: 2019/01/11 20:27:42 by jlucas-l         ###   ########.fr        #
+#    Updated: 2019/01/18 18:51:24 by jlucas-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ OBJ_D = objs
 INC = -I ./libft/includes -I ./includes -I ./minilibx_macos
 LIB = -L./libft/ -lft 
 MLX = -L./minilibx_macos -lmlx -framework OpenGL -framework AppKit
+OCL = -framework OpenCL
 
 GCCFLAGS = -Wall -Wextra -Werror
 SRCS = main.c \
@@ -24,6 +25,8 @@ SRCS = main.c \
 	   image.c \
 	   init.c \
 	   secondary.c \
+	   ocl_init.c \
+	   enter_data.c \
 	   thread.c
 
 OBJS = $(addprefix $(OBJ_D)/,$(SRCS:.c=.o))
@@ -35,7 +38,7 @@ $(NAME):
 		make -C ./minilibx_macos
 		gcc $(GCCFLAGS) -c $(SRCS) $(INC)
 		mkdir -p $(OBJ_D) && mv $(SRCS:.c=.o) ./$(OBJ_D)/
-		gcc $(GCCFLAGS) -o $(NAME) $(OBJS) $(LIB) $(MLX) $(INC)
+		gcc $(GCCFLAGS) -o $(NAME) $(OBJS) $(LIB) $(MLX) $(INC) $(OCL)
 
 clean:
 		make clean -C ./libft

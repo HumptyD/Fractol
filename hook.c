@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 14:41:18 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/12 21:38:20 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/18 18:54:35 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,19 @@ static void	zoom(int x, int y, t_var *var, double z)
 	double	w1;
 	double	h1;
 
-	w = (var->f.x_max - var->f.x_min) * var->opt.scale;
-	h = (var->f.y_max - var->f.y_min) * var->opt.scale;
-	w1 = (var->f.x_max - var->f.y_min) * var->opt.scale * z;
-	h1 = (var->f.y_max - var->f.y_min) * var->opt.scale * z;
-	var->opt.scale *= z;
+	w = (var->f.x_max - var->f.x_min) * var->scale;
+	h = (var->f.y_max - var->f.y_min) * var->scale;
+	w1 = (var->f.x_max - var->f.y_min) * var->scale * z;
+	h1 = (var->f.y_max - var->f.y_min) * var->scale * z;
+	var->scale *= z;
 	var->f.offx += ((double)x / W_WIDTH) * (w1 - w);
 	var->f.offy += ((double)y / W_HEIGHT) * (h1 - h);
-	(z < 1) ? var->opt.iter++ : var->opt.iter--;
+	(z < 1) ? var->iter++ : var->iter--;
 }
 
 int			keyboard(int key, t_var *var)
 {
-	clear_image(var->img);
+	clear_image(&var->img);
 	key == 53 ? exit(0) : 0;
 	put_set(var);
 	return (0);
@@ -67,7 +67,7 @@ int			mouse_press(int button, int x, int y, t_var *var)
 		if (button == 4)
 			zoom(x, y, var, 1.1);
 		if (button == 4 || button == 5)
-			thread(var);
+			ft_pthread(var);
 	}
 	return (0);
 }
@@ -83,19 +83,19 @@ int			mouse_move(int x, int y, t_var *var)
 	var->ms.c_y = y;
 	if (var->ms.pressed == 1 && var->f.name == 2)
 	{
-		w = (var->f.x_max - var->f.x_min) * var->opt.scale;
-		h = (var->f.y_max - var->f.y_min) * var->opt.scale;
+		w = (var->f.x_max - var->f.x_min) * var->scale;
+		h = (var->f.y_max - var->f.y_min) * var->scale;
 		var->cx.re -= (double)(var->ms.p_x - var->ms.c_x) / W_WIDTH * w;
 		var->cx.im -= (double)(var->ms.p_y - var->ms.c_y) / W_HEIGHT * h;
 	}
 	if (var->ms.pressed == 2)
 	{
-		w = (var->f.x_max - var->f.x_min) * var->opt.scale;
-		h = (var->f.y_max - var->f.y_min) * var->opt.scale;
+		w = (var->f.x_max - var->f.x_min) * var->scale;
+		h = (var->f.y_max - var->f.y_min) * var->scale;
 		var->f.offx -= (double)(var->ms.p_x - var->ms.c_x) / W_WIDTH * w;
 		var->f.offy -= (double)(var->ms.p_y - var->ms.c_y) / W_HEIGHT * h;
 	}
 	if (var->ms.pressed)
-		thread(var);
+		ft_pthread(var);
 	return (0);
 }
