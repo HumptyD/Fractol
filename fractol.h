@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/24 16:08:26 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/18 22:54:02 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/19 19:57:15 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,10 @@ typedef struct	s_ocl
 	cl_uint				r_n_devices;
 	cl_context			context;
 	cl_command_queue	c_queue;
-	cl_mem				Z;
-	cl_mem				C;
-	cl_mem				I;
-	cl_mem				ITER;
+	cl_mem				zmem;
+	cl_mem				cmem;
+	cl_mem				imem;
+	cl_mem				itmem;
 	cl_program			program;
 	char				*src;
 	cl_kernel			kernel;
@@ -97,6 +97,8 @@ typedef struct	s_var
 	t_mouse		ms;
 	t_arr_ocl	data;
 	t_ocl		ocl;
+	int			mode;
+	int			move;
 	int			x;
 	int			y;
 	int			y_max;
@@ -105,7 +107,6 @@ typedef struct	s_var
 }				t_var;
 
 void			init(t_var *var);
-void			ft_fractal_name_init(t_var *var, char *name);
 void			*put_set(void *tab);
 void			display_error(int cond, char *str);
 void			set_pixel(t_var *var, int x, int y, int color);
@@ -114,7 +115,7 @@ int				mouse_press(int button, int x, int y, t_var *var);
 int				mouse_release(int button, int x, int y, t_var *var);
 int				mouse_move(int x, int y, t_var *var);
 void			clear_image(t_img *img);
-void			ft_pthread(t_var *var);
+void			ft_render(t_var *var);
 int				get_color(int n);
 void			*ft_enter_data(void *tab);
 void			*ft_fill_img(void *tab);

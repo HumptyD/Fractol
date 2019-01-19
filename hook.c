@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 14:41:18 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/18 18:54:35 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/19 20:00:47 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,11 @@ int			keyboard(int key, t_var *var)
 {
 	clear_image(&var->img);
 	key == 53 ? exit(0) : 0;
-	put_set(var);
+	if (key == 258)
+		var->mode = var->mode ? 0 : 1;
+	if (key == 49)
+		var->move = var->move ? 0 : 1;
+	ft_render(var);
 	return (0);
 }
 
@@ -56,18 +60,12 @@ int			mouse_press(int button, int x, int y, t_var *var)
 			var->ms.c_y = y;
 			var->ms.pressed = 1;
 		}
-		if (button == 2)
-		{
-			var->ms.c_x = x;
-			var->ms.c_y = y;
-			var->ms.pressed = 2;
-		}
 		if (button == 5)
 			zoom(x, y, var, 0.9);
 		if (button == 4)
 			zoom(x, y, var, 1.1);
 		if (button == 4 || button == 5)
-			ft_pthread(var);
+			ft_render(var);
 	}
 	return (0);
 }
@@ -81,21 +79,21 @@ int			mouse_move(int x, int y, t_var *var)
 	var->ms.p_y = var->ms.c_y;
 	var->ms.c_x = x;
 	var->ms.c_y = y;
-	if (var->ms.pressed == 1 && var->f.name == 2)
+	if (var->f.name == 2 && !var->ms.pressed && var->move)
 	{
 		w = (var->f.x_max - var->f.x_min) * var->scale;
 		h = (var->f.y_max - var->f.y_min) * var->scale;
 		var->cx.re -= (double)(var->ms.p_x - var->ms.c_x) / W_WIDTH * w;
 		var->cx.im -= (double)(var->ms.p_y - var->ms.c_y) / W_HEIGHT * h;
 	}
-	if (var->ms.pressed == 2)
+	if (var->ms.pressed == 1)
 	{
 		w = (var->f.x_max - var->f.x_min) * var->scale;
 		h = (var->f.y_max - var->f.y_min) * var->scale;
 		var->f.offx -= (double)(var->ms.p_x - var->ms.c_x) / W_WIDTH * w;
 		var->f.offy -= (double)(var->ms.p_y - var->ms.c_y) / W_HEIGHT * h;
 	}
-	if (var->ms.pressed)
-		ft_pthread(var);
+	if (var->ms.pressed || var->f.name == 2)
+		ft_render(var);
 	return (0);
 }

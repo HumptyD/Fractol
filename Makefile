@@ -6,7 +6,7 @@
 #    By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/12/08 14:33:53 by jlucas-l          #+#    #+#              #
-#    Updated: 2019/01/18 18:51:24 by jlucas-l         ###   ########.fr        #
+#    Updated: 2019/01/19 15:56:28 by jlucas-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ SRCS = main.c \
 	   secondary.c \
 	   ocl_init.c \
 	   enter_data.c \
-	   thread.c
+	   render.c
 
 OBJS = $(addprefix $(OBJ_D)/,$(SRCS:.c=.o))
 

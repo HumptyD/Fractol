@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   thread.c                                           :+:      :+:    :+:   */
+/*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 19:17:10 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/18 22:26:33 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/19 19:51:51 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,20 @@ static void	ft_pthread_data(t_var *var)
 
 static void	ft_ocl_exe(t_var *var)
 {
-	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.Z, CL_TRUE, 0,
-			sizeof(cl_double) * W_WIDTH * W_HEIGHT * 2, var->data.z, 0, NULL, NULL);
-	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.C, CL_TRUE, 0,
-			sizeof(cl_double) * W_WIDTH * W_HEIGHT * 2, var->data.c, 0, NULL, NULL);
-	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.I, CL_TRUE, 0,
-			sizeof(cl_int) * W_WIDTH * W_HEIGHT, var->data.i, 0, NULL, NULL);
-	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.ITER, CL_TRUE, 0,
+	int		s;
+
+	s = W_WIDTH * W_HEIGHT;
+	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.zmem, CL_TRUE, 0,
+			sizeof(cl_double) * s * 2, var->data.z, 0, NULL, NULL);
+	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.cmem, CL_TRUE, 0,
+			sizeof(cl_double) * s * 2, var->data.c, 0, NULL, NULL);
+	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.imem, CL_TRUE, 0,
+			sizeof(cl_int) * s, var->data.i, 0, NULL, NULL);
+	clEnqueueWriteBuffer(var->ocl.c_queue, var->ocl.itmem, CL_TRUE, 0,
 			sizeof(cl_int), &var->iter, 0, NULL, NULL);
 	clEnqueueNDRangeKernel(var->ocl.c_queue, var->ocl.kernel, 1, NULL,
 			&var->ocl.w_item, NULL, 0, NULL, NULL);
-	clEnqueueReadBuffer(var->ocl.c_queue, var->ocl.I, CL_TRUE, 0,
+	clEnqueueReadBuffer(var->ocl.c_queue, var->ocl.imem, CL_TRUE, 0,
 			sizeof(cl_int) * var->ocl.w_item, var->data.i, 0, NULL, NULL);
 }
 
@@ -64,18 +67,7 @@ static void	ft_pthread_img(t_var *var)
 		pthread_join(t[i], NULL);
 }
 
-
-void	ft_pthread(t_var *var)
-{
-	ft_pthread_data(var);
-	ft_ocl_exe(var);
-	ft_pthread_img(var);
-	mlx_put_image_to_window(var->mlx, var->win, var->img.image, 0, 0);
-}
-
-
-/*
-void	thread(t_var *var)
+static void	ft_pthread_render(t_var *var)
 {
 	t_var		tab[THREAD_N];
 	pthread_t	t[THREAD_N];
@@ -93,4 +85,17 @@ void	thread(t_var *var)
 	while (i--)
 		pthread_join(t[i], NULL);
 	mlx_put_image_to_window(var->mlx, var->win, var->img.image, 0, 0);
-}*/
+}
+
+void		ft_render(t_var *var)
+{
+	if (var->mode && var->f.name != 4)
+	{
+		ft_pthread_data(var);
+		ft_ocl_exe(var);
+		ft_pthread_img(var);
+		mlx_put_image_to_window(var->mlx, var->win, var->img.image, 0, 0);
+	}
+	else
+		ft_pthread_render(var);
+}
