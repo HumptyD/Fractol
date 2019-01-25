@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/27 14:41:18 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 20:00:47 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/20 16:50:18 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,15 @@ static void	zoom(int x, int y, t_var *var, double z)
 
 int			keyboard(int key, t_var *var)
 {
-	clear_image(&var->img);
 	key == 53 ? exit(0) : 0;
 	if (key == 258)
 		var->mode = var->mode ? 0 : 1;
 	if (key == 49)
+	{
+		var->ms.c_x = W_WIDTH / 2;
+		var->ms.c_y = W_HEIGHT / 2;
 		var->move = var->move ? 0 : 1;
+	}
 	ft_render(var);
 	return (0);
 }

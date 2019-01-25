@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/24 16:08:26 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 19:57:15 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/25 15:37:09 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,10 @@
 # include <math.h>
 # include <pthread.h>
 # include <OpenCL/opencl.h>
+# include <stdio.h>
 
-# define W_WIDTH 720
-# define W_HEIGHT 720
+# define W_WIDTH 1000
+# define W_HEIGHT 1000
 # define THREAD_N 16
 
 typedef struct	s_complex
@@ -116,7 +117,7 @@ int				mouse_release(int button, int x, int y, t_var *var);
 int				mouse_move(int x, int y, t_var *var);
 void			clear_image(t_img *img);
 void			ft_render(t_var *var);
-int				get_color(int n);
+int				get_color(int n, t_var *var);
 void			*ft_enter_data(void *tab);
 void			*ft_fill_img(void *tab);
 void			ft_ocl_init(t_var *var);

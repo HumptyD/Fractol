@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 15:34:14 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 16:28:18 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/25 16:12:45 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,13 @@ static void	ft_read_cl(t_var *var)
 	char	*temp;
 
 	var->ocl.src = ft_strnew(0);
-	fd = open(var->f.name == 3 ? "bship_calc.cl" :
-			"mand_julia_calc.cl", O_RDONLY);
+	fd = -1;
+	if (var->f.name == 1 || var->f.name == 2)
+		fd = open("mand_julia_calc.cl", O_RDONLY);
+	else if (var->f.name == 3)
+		fd = open("bship_calc.cl", O_RDONLY);
+	else if (var->f.name == 4)
+		fd = open("mandel_flower_calc.cl", O_RDONLY);
 	while ((ret = read(fd, buf, BUFF_SIZE)))
 	{
 		buf[ret] = '\0';
@@ -39,8 +44,15 @@ static void	ft_make_kernel(t_var *var)
 			1, (const char **)&var->ocl.src, NULL, &var->ocl.ret);
 	var->ocl.ret = clBuildProgram(var->ocl.program, 1,
 			&var->ocl.d_id, NULL, NULL, NULL);
-	var->ocl.kernel = clCreateKernel(var->ocl.program, var->f.name == 3 ?
-			"bship_calc" : "mand_julia_calc", &var->ocl.ret);
+	if (var->f.name == 1 || var->f.name == 2)
+		var->ocl.kernel = clCreateKernel(var->ocl.program,
+				"mand_julia_calc", &var->ocl.ret);
+	else if (var->f.name == 3)
+		var->ocl.kernel = clCreateKernel(var->ocl.program,
+				"bship_calc", &var->ocl.ret);
+	else if (var->f.name == 4)
+		var->ocl.kernel = clCreateKernel(var->ocl.program,
+				"mandel_flower_calc", &var->ocl.ret);
 	clSetKernelArg(var->ocl.kernel, 0, sizeof(cl_mem), (void *)&var->ocl.zmem);
 	clSetKernelArg(var->ocl.kernel, 1, sizeof(cl_mem), (void *)&var->ocl.cmem);
 	clSetKernelArg(var->ocl.kernel, 2, sizeof(cl_mem), (void *)&var->ocl.imem);

@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/24 18:44:59 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 18:32:33 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/25 16:16:33 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,51 +21,21 @@ void	display_error(int cond, char *str)
 	}
 }
 
-int		get_color(int n)
+int		get_color(int n, t_var *var)
 {
-	if (n == 0)
-		return (0xD31F19);
-	else if (n == 1)
-		return (0xE58D12);
-	else if (n == 2)
-		return (0xE5D012);
-	else if (n == 3)
-		return (0x7BE512);
-	else if (n == 4)
-		return (0x12E5DE);
-	else if (n == 5)
-		return (0x1227E5);
+	double	p;
+
+	if (n == var->iter)
+		return (0x000000);
+	p = (double)n / var->iter;
+	if (p >= 0 && p < 0.2)
+		return (n % 100 * 0x2F2472);
+	else if (p >= 0.2 && p < 0.4)
+		return (n % 100 * 0x6ED7EF);
+	else if (p >= 0.4 && p < 0.6)
+		return (n % 100 * 0x6d68d1);
+	else if (p >= 0.6 && p < 0.8)
+		return (n % 100 * 0x6EEFAC);
 	else
-		return (0xE512C5);
+		return (n % 100 * 0xCFEF6E);
 }
-
-/*
-double	ft_ilerp(double val, double first, double second)
-{
-	if (val == first)
-		return (0.0);
-	if (val == second)
-		return (1.0);
-	return ((val - first) / (second - first));
-}
-
-int		ft_lerpi(int first, int second, double percent)
-{
-	if (first == second)
-		return (first);
-	return ((int)((double)first + (second - first) * percent));
-}
-
-int		get_color(int start, int end, double percent)
-{
-	int	r;
-	int	g;
-	int	b;
-
-	if (start == end)
-		return (start);
-	r = ft_lerpi((start >> 16) & 0xFF, (end >> 16) & 0xFF, percent);
-	g = ft_lerpi((start >> 8) & 0xFF, (end >> 8) & 0xFF, percent);
-	b = ft_lerpi((start) & 0xFF, (end) & 0xFF, percent);
-	return (r << 16 | g << 8 | b);
-}*/

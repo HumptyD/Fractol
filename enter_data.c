@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/18 18:21:28 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 15:30:16 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/20 15:50:05 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*ft_enter_data(void *tab)
 		while (var->y < var->y_max)
 		{
 			i = var->y * W_WIDTH + var->x;
-			if (var->f.name == 1 || var->f.name == 3)
+			if (var->f.name == 1 || var->f.name == 3 || var->f.name == 4)
 				mnd_bship_data(var, i * 2, i * 2 + 1);
 			else if (var->f.name == 2)
 				julia_data(var, i * 2, i * 2 + 1);

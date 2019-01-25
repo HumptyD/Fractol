@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 19:17:10 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 19:51:51 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/20 15:46:09 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static void	ft_pthread_render(t_var *var)
 
 void		ft_render(t_var *var)
 {
-	if (var->mode && var->f.name != 4)
+	if (var->mode)
 	{
 		ft_pthread_data(var);
 		ft_ocl_exe(var);

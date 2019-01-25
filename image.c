@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 20:11:00 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/18 22:41:32 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/25 15:43:06 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ void	*ft_fill_img(void *tab)
 		while (var->y < var->y_max)
 		{
 			id = var->y * W_WIDTH + var->x;
-			set_pixel(var, var->x, var->y, var->data.i[id] == var->iter
-					? 0 : var->data.i[id] * 265);
+			set_pixel(var, var->x, var->y, get_color(var->data.i[id], var));
 			var->y++;
 		}
 		var->x++;

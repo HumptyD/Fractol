@@ -6,7 +6,7 @@
 /*   By: jlucas-l <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 19:25:34 by jlucas-l          #+#    #+#             */
-/*   Updated: 2019/01/19 19:57:58 by jlucas-l         ###   ########.fr       */
+/*   Updated: 2019/01/25 15:36:51 by jlucas-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	mandelbrot(t_var *var, int x, int y)
 			var->cx.zim * var->cx.zim + var->cx.re;
 		var->cx.zim = 2 * temp * var->cx.zim + var->cx.im;
 	}
-	set_pixel(var, x, y, n == var->iter ? 0 : n * 265);
+	set_pixel(var, x, y, get_color(n, var));
 }
 
 void	burningship(t_var *var, int x, int y)
@@ -55,7 +55,7 @@ void	burningship(t_var *var, int x, int y)
 			var->cx.zim * var->cx.zim + var->cx.re);
 		var->cx.zim = fabs(2 * temp * var->cx.zim + var->cx.im);
 	}
-	set_pixel(var, x, y, n == var->iter ? 0 : get_color(n % 7));
+	set_pixel(var, x, y, get_color(n, var));
 }
 
 void	julia(t_var *var, int x, int y)
@@ -76,7 +76,7 @@ void	julia(t_var *var, int x, int y)
 			var->cx.zim * var->cx.zim + var->cx.re;
 		var->cx.zim = 2 * temp * var->cx.zim + var->cx.im;
 	}
-	set_pixel(var, x, y, n == var->iter ? 0 : n * 265);
+	set_pixel(var, x, y, get_color(n, var));
 }
 
 void	mandel_flower(t_var *var, int x, int y)
@@ -103,7 +103,7 @@ void	mandel_flower(t_var *var, int x, int y)
 			pow(var->cx.zim, 3) + 6 * temp * pow(var->cx.zim, 5)) + var->cx.re;
 		ri = pow(var->cx.zre, 6) + pow(var->cx.zim, 6);
 	}
-	set_pixel(var, x, y, n == var->iter ? 0 : n * 265);
+	set_pixel(var, x, y, get_color(n, var));
 }
 
 void	*put_set(void *tab)
